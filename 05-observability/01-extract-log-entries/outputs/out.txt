@@ -1,0 +1,34 @@
+ubuntu@pg-db:~$ grep '2026-10-04' /var/log/postgresql/postgresql-16-main.log | grep -E 'ERROR|FATAL'
+2026-10-04 20:53:00.105 UTC [2575] app_user@appdb FATAL:  password authentication failed for user "app_user"
+2026-10-04 20:53:00.116 UTC [2576] app_user@appdb FATAL:  password authentication failed for user "app_user"
+2026-10-04 20:53:01.615 UTC [2578] app_user@appdb FATAL:  password authentication failed for user "app_user"
+2026-10-04 20:53:01.626 UTC [2579] app_user@appdb FATAL:  password authentication failed for user "app_user"
+2026-10-04 20:53:02.449 UTC [2581] app_user@appdb FATAL:  password authentication failed for user "app_user"
+2026-10-04 20:53:02.460 UTC [2582] app_user@appdb FATAL:  password authentication failed for user "app_user"
+2026-10-04 20:53:46.293 UTC [2588] user.sh@appdb FATAL:  Peer authentication failed for user "user.sh"
+2026-10-04 20:53:51.318 UTC [2592] user.sh@appdb FATAL:  Peer authentication failed for user "user.sh"
+2026-10-04 20:53:51.990 UTC [2596] user.sh@appdb FATAL:  Peer authentication failed for user "user.sh"
+2026-10-04 20:53:57.672 UTC [2599] app_user@appdb FATAL:  password authentication failed for user "app_user"
+2026-10-04 20:53:57.683 UTC [2600] app_user@appdb FATAL:  password authentication failed for user "app_user"
+2026-10-04 20:53:58.596 UTC [2602] app_user@appdb FATAL:  password authentication failed for user "app_user"
+2026-10-04 20:53:58.607 UTC [2603] app_user@appdb FATAL:  password authentication failed for user "app_user"
+2026-10-04 20:54:06.767 UTC [2607] postgres@appdb ERROR:  relation "bdfimjbiskdmbikdfmnbidf" does not exist at character 15
+2026-10-04 20:54:08.163 UTC [2611] postgres@appdb ERROR:  relation "bdfimjbiskdmbikdfmnbidf" does not exist at character 15
+2026-10-04 20:54:08.825 UTC [2615] postgres@appdb ERROR:  relation "bdfimjbiskdmbikdfmnbidf" does not exist at character 15
+
+ubuntu@pg-db:~$ sudo grep '2026-10-04' /var/log/postgresql/postgresql-16-main.log | grep -c 'FATAL'
+13
+ubuntu@pg-db:~$ sudo grep '2026-10-04' /var/log/postgresql/postgresql-16-main.log | grep -c 'ERROR'
+3
+
+
+----------------------------------------------------------------------------------------
+
+Summary
+- Log: /var/log/postgresql/postgresql-16-main.log on pg-db
+- Time range: 2026-10-04 (UTC), all entries are between 20:53 and 20:55
+- Filter: level ERROR or FATAL
+- Found 16 entries: 13 FATAL and 3 ERROR
+- 10 FATAL: wrong password for app_user
+- 3 FATAL: peer authentication failed for user "user.sh"
+- 3 ERROR: table "bdfimjbiskdmbikdfmnbidf" does not exist

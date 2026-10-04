@@ -1,0 +1,16 @@
+ubuntu@pg-db:~$ vmstat 1 3
+procs -----------memory---------- ---swap-- -----io---- -system-- -------cpu-------
+ r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st gu
+ 1  0      0 1377712  22552 455340    0    0    83    30  102    0  0  0 99  0  0  0
+ 0  0      0 1377712  22552 455340    0    0     0     0  264  162  0  0 100  0  0  0
+ 0  0      0 1377712  22552 455340    0    0     0     0  227  161  0  1 100  0  0  0
+ubuntu@pg-db:~$ tail -n 3 /var/log/postgresql/postgresql-16-main.log
+2026-10-04 20:54:08.163 UTC [2611] postgres@appdb STATEMENT:  select * from bdfimjbiskdmbikdfmnbidf
+2026-10-04 20:54:08.825 UTC [2615] postgres@appdb ERROR:  relation "bdfimjbiskdmbikdfmnbidf" does not exist at character 15
+2026-10-04 20:54:08.825 UTC [2615] postgres@appdb STATEMENT:  select * from bdfimjbiskdmbikdfmnbidf
+ubuntu@pg-db:~$ journalctl -u ssh -n 5 --no-pager
+Oct 04 19:53:34 pg-db sshd[1305]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+Oct 04 20:06:52 pg-db sshd[1482]: Accepted publickey for ubuntu from 10.7.101.70 port 45746 ssh2: ED25519 SHA256:rlWMkm16nZx8tetwys8SnafxeMiGdmqW+9MKK+v+yuI
+Oct 04 20:06:52 pg-db sshd[1482]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+Oct 04 20:19:49 pg-db sshd[1616]: Accepted publickey for ubuntu from 10.7.101.70 port 55654 ssh2: ED25519 SHA256:rlWMkm16nZx8tetwys8SnafxeMiGdmqW+9MKK+v+yuI
+Oct 04 20:19:49 pg-db sshd[1616]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
