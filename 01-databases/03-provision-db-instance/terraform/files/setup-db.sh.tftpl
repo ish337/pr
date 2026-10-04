@@ -1,0 +1,40 @@
+#!/bin/bash
+
+set -euo pipefail
+
+DB_NAME="${db_name}"
+DB_USER="${db_user}"
+DB_PASSWORD="$(echo '${db_password_b64}' | base64 -d)"
+SAMPLE_URL="${sample_url}"
+
+# The default cluster's config dir, /etc/postgresql/<version>/main
+PG_CONF_DIR=$(ls -d /etc/postgresql/*/main | head -n1)
+
+# Listen on all interfaces, pg_hba.conf decides who gets in
+echo "listen_addresses = '*'" > "$PG_CONF_DIR/conf.d/10-listen.conf"
+
+# Allow connections from other machines, with a password
+echo "host all all 0.0.0.0/0 scram-sha-256" >> "$PG_CONF_DIR/pg_hba.conf"
+
+systemctl restart postgresql
+
+# psql quotes :'var' and :"var" itself, so any characters in the values are safe
+runuser -u postgres -- psql -v ON_ERROR_STOP=1 \
+  -v db_name="$DB_NAME" -v db_user="$DB_USER" -v db_password="$DB_PASSWORD" <<'SQL'
+CREATE ROLE :"db_user" LOGIN PASSWORD :'db_password';
+CREATE DATABASE :"db_name";
+REVOKE ALL ON DATABASE :"db_name" FROM PUBLIC;
+GRANT CONNECT ON DATABASE :"db_name" TO :"db_user";
+
+\connect :db_name
+-- Read and write data in the tables postgres creates later, no schema changes
+GRANT USAGE ON SCHEMA public TO :"db_user";
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO :"db_user";
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT USAGE, SELECT ON SEQUENCES TO :"db_user";
+SQL
+
+# Sample database, loaded as postgres after the default privileges above,
+# so DB_USER gets read/write on its tables
+curl -fsSL "$SAMPLE_URL" | runuser -u postgres -- psql -v ON_ERROR_STOP=1 -q -d "$DB_NAME"
+
+echo "--- PostgreSQL ready: database $DB_NAME, role $DB_USER ---"

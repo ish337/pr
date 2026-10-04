@@ -1,0 +1,25 @@
+#cloud-config
+hostname: ${hostname}
+
+# SSH as the default "ubuntu" user
+ssh_authorized_keys:
+  - ${ssh_public_key}
+
+# PostgreSQL from the Ubuntu repository, with its default cluster and settings
+package_update: true
+packages:
+  - qemu-guest-agent
+  - postgresql
+
+# Contains the DB password, so root only. runcmd deletes it after the run
+write_files:
+  - path: /root/setup-db.sh
+    permissions: "0700"
+    encoding: b64
+    content: ${setup_script_b64}
+
+# Output goes to /var/log/cloud-init-output.log
+runcmd:
+  - systemctl start qemu-guest-agent
+  - /root/setup-db.sh
+  - rm -f /root/setup-db.sh
