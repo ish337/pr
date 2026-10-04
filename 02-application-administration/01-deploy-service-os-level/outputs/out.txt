@@ -1,0 +1,76 @@
+[Illia@archlinux 01-deploy-service-os-level]$ getent hosts ish-pgdb.duckdns.org
+10.7.66.111     ish-pgdb.duckdns.org
+
+--------------------------------------------------------------------------------------------------------
+
+ubuntu@pg-db:~$ id postgres
+uid=109(postgres) gid=113(postgres) groups=113(postgres),112(ssl-cert)
+ubuntu@pg-db:~$ systemctl status postgresql@16-main
+● postgresql@16-main.service - PostgreSQL Cluster 16-main
+     Loaded: loaded (/usr/lib/systemd/system/postgresql@.service; enabled-runtime; preset: enabled)
+     Active: active (running) since Sun 2026-10-04 19:38:53 UTC; 3min 3s ago
+    Process: 665 ExecStart=/usr/bin/pg_ctlcluster --skip-systemctl-redirect 16-main start (code=exited, status=0/SUCCESS)
+   Main PID: 742 (postgres)
+      Tasks: 6 (limit: 2315)
+     Memory: 41.1M (peak: 46.6M)
+        CPU: 276ms
+     CGroup: /system.slice/system-postgresql.slice/postgresql@16-main.service
+             ├─742 /usr/lib/postgresql/16/bin/postgres -D /var/lib/postgresql/16/main -c config_file=/etc/postgresql/16/main/postgresql.conf
+             ├─782 "postgres: 16/main: checkpointer "
+             ├─783 "postgres: 16/main: background writer "
+             ├─787 "postgres: 16/main: walwriter "
+             ├─788 "postgres: 16/main: autovacuum launcher "
+             └─789 "postgres: 16/main: logical replication launcher "
+
+Oct 04 19:38:50 pg-db systemd[1]: Starting postgresql@16-main.service - PostgreSQL Cluster 16-main...
+Oct 04 19:38:53 pg-db systemd[1]: Started postgresql@16-main.service - PostgreSQL Cluster 16-main.
+ubuntu@pg-db:~$ ps aux | grep postgres
+postgres     742  0.0  1.5 223296 30920 ?        Ss   19:38   0:00 /usr/lib/postgresql/16/bin/postgres -D /var/lib/postgresql/16/main -c config_file=/etc/postgresql/16/main/postgresql.conf
+postgres     782  0.0  0.3 223296  6324 ?        Ss   19:38   0:00 postgres: 16/main: checkpointer 
+postgres     783  0.0  0.3 223432  7540 ?        Ss   19:38   0:00 postgres: 16/main: background writer 
+postgres     787  0.0  0.5 223296 10516 ?        Ss   19:38   0:00 postgres: 16/main: walwriter 
+postgres     788  0.0  0.4 224884  8872 ?        Ss   19:38   0:00 postgres: 16/main: autovacuum launcher 
+postgres     789  0.0  0.4 224860  8224 ?        Ss   19:38   0:00 postgres: 16/main: logical replication launcher 
+ubuntu      1002  0.0  0.1   7084  2224 pts/0    S+   19:41   0:00 grep --color=auto postgres
+ubuntu@pg-db:~$ ss -tulpn | grep 5432
+tcp   LISTEN 0      200          0.0.0.0:5432      0.0.0.0:*          
+tcp   LISTEN 0      200             [::]:5432         [::]:*          
+ubuntu@pg-db:~$ cat /etc/postgresql/16/main/conf.d/10-listen.conf
+listen_addresses = '*'
+ubuntu@pg-db:~$ sudo tail -n 1 /etc/postgresql/16/main/pg_hba.conf
+host all all 0.0.0.0/0 scram-sha-256
+ubuntu@pg-db:~$ sudo tail /var/log/postgresql/postgresql-16-main.log
+2026-10-04 19:28:04.053 UTC [3582] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.020 s, sync=0.010 s, total=0.275 s; sync files=2, longest=0.005 s, average=0.005 s; distance=0 kB, estimate=0 kB; lsn=0/14EF6E0, redo lsn=0/14EF6E0
+2026-10-04 19:28:04.057 UTC [3581] LOG:  database system is shut down
+2026-10-04 19:28:04.187 UTC [3681] LOG:  starting PostgreSQL 16.15 (Ubuntu 16.15-0ubuntu0.24.04.1) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0, 64-bit
+2026-10-04 19:28:04.187 UTC [3681] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+2026-10-04 19:28:04.187 UTC [3681] LOG:  listening on IPv6 address "::", port 5432
+2026-10-04 19:28:04.192 UTC [3681] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2026-10-04 19:28:04.203 UTC [3684] LOG:  database system was shut down at 2026-10-04 19:28:04 UTC
+2026-10-04 19:28:04.213 UTC [3681] LOG:  database system is ready to accept connections
+2026-10-04 19:33:04.282 UTC [3682] LOG:  checkpoint starting: time
+2026-10-04 19:34:48.462 UTC [3682] LOG:  checkpoint complete: wrote 1044 buffers (6.4%); 0 WAL file(s) added, 0 removed, 0 recycled; write=104.139 s, sync=0.024 s, total=104.180 s; sync files=358, longest=0.005 s, average=0.001 s; distance=5347 kB, estimate=5347 kB; lsn=0/1A286A0, redo lsn=0/1A28668
+ubuntu@pg-db:~$ ping google.com
+PING google.com (142.250.120.100) 56(84) bytes of data.
+64 bytes from zo-in-f100.1e100.net (142.250.120.100): icmp_seq=1 ttl=114 time=10.5 ms
+64 bytes from zo-in-f100.1e100.net (142.250.120.100): icmp_seq=2 ttl=114 time=10.2 ms
+64 bytes from zo-in-f100.1e100.net (142.250.120.100): icmp_seq=3 ttl=114 time=10.2 ms
+64 bytes from zo-in-f100.1e100.net (142.250.120.100): icmp_seq=4 ttl=114 time=10.4 ms
+^C
+--- google.com ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3004ms
+rtt min/avg/max/mdev = 10.173/10.310/10.452/0.114 ms
+ubuntu@pg-db:~$ ping 10.7.66.200
+PING 10.7.66.200 (10.7.66.200) 56(84) bytes of data.
+64 bytes from 10.7.66.200: icmp_seq=1 ttl=64 time=0.222 ms
+64 bytes from 10.7.66.200: icmp_seq=2 ttl=64 time=0.120 ms
+64 bytes from 10.7.66.200: icmp_seq=3 ttl=64 time=0.114 ms
+^C
+--- 10.7.66.200 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2074ms
+rtt min/avg/max/mdev = 0.114/0.152/0.222/0.049 ms
+
+--------------------------------------------------------------------------------------------------------
+
+ubuntu@pg-db:~$ uptime
+ 19:39:42 up 1 min,  1 user,  load average: 0.67, 0.29, 0.10
