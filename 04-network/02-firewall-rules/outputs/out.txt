@@ -1,0 +1,55 @@
+Pre-defined rule: allow incoming SSH (22/tcp) and PostgreSQL (5432/tcp) only, deny all other incoming, allow outgoing.
+Test: nginx on port 80 is reachable before the rule and blocked after it.
+
+----------------------------------------------------------------------------------------
+
+[Illia@archlinux pr]$ curl -m 5 -I http://ish-pgdb.duckdns.org
+HTTP/1.1 200 OK
+Server: nginx/1.24.0 (Ubuntu)
+Date: Sun, 04 Oct 2026 20:22:13 GMT
+Content-Type: text/html
+Content-Length: 615
+Last-Modified: Sun, 04 Oct 2026 20:20:25 GMT
+Connection: keep-alive
+ETag: "6ac2b509-267"
+Accept-Ranges: bytes
+
+----------------------------------------------------------------------------------------
+
+ubuntu@pg-db:~$ 
+ubuntu@pg-db:~$ sudo ufw status
+Status: inactive
+ubuntu@pg-db:~$ ss -tulpn | grep 80
+tcp   LISTEN 0      511          0.0.0.0:80        0.0.0.0:*          
+tcp   LISTEN 0      511             [::]:80           [::]:*          
+ubuntu@pg-db:~$ 
+ubuntu@pg-db:~$ 
+ubuntu@pg-db:~$ sudo ufw default deny incoming
+Default incoming policy changed to 'deny'
+(be sure to update your rules accordingly)
+ubuntu@pg-db:~$ sudo ufw default allow outgoing
+Default outgoing policy changed to 'allow'
+(be sure to update your rules accordingly)
+ubuntu@pg-db:~$ sudo ufw allow 22/tcp
+Rules updated
+Rules updated (v6)
+ubuntu@pg-db:~$ sudo ufw allow 5432/tcp
+Rules updated
+Rules updated (v6)
+ubuntu@pg-db:~$ sudo ufw enable
+Command may disrupt existing ssh connections. Proceed with operation (y|n)? y
+Firewall is active and enabled on system startup
+ubuntu@pg-db:~$ sudo ufw status
+Status: active
+
+To                         Action      From
+--                         ------      ----
+22/tcp                     ALLOW       Anywhere                  
+5432/tcp                   ALLOW       Anywhere                  
+22/tcp (v6)                ALLOW       Anywhere (v6)             
+5432/tcp (v6)              ALLOW       Anywhere (v6)  
+
+----------------------------------------------------------------------------------------
+
+[Illia@archlinux pr]$ curl -m 5 -I http://ish-pgdb.duckdns.org
+curl: (28) Connection timed out after 5001 milliseconds

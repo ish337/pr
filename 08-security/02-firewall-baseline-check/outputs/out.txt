@@ -1,0 +1,14 @@
+ubuntu@pg-db:~$ sudo systemctl is-enabled ufw
+enabled
+ubuntu@pg-db:~$ sudo ufw status verbose 
+Status: active
+Logging: on (low)
+Default: deny (incoming), allow (outgoing), disabled (routed)
+New profiles: skip
+
+To                         Action      From
+--                         ------      ----
+22/tcp                     ALLOW IN    Anywhere                  
+5432/tcp                   ALLOW IN    Anywhere                  
+22/tcp (v6)                ALLOW IN    Anywhere (v6)             
+5432/tcp (v6)              ALLOW IN    Anywhere (v6) 
