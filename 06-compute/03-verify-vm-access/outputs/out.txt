@@ -1,0 +1,44 @@
+[Illia@archlinux 03-verify-vm-access]$ ssh ubuntu@ish-pgdb.duckdns.org
+Enter passphrase for key '/home/Illia/.ssh/id_ed25519': 
+Welcome to Ubuntu 24.04.5 LTS (GNU/Linux 6.8.0-142-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Sun Oct  4 19:53:34 UTC 2026
+
+  System load:  0.0               Processes:             112
+  Usage of /:   24.5% of 8.65GB   Users logged in:       0
+  Memory usage: 8%                IPv4 address for eth0: 10.7.66.111
+  Swap usage:   0%
+
+
+Expanded Security Maintenance for Applications is not enabled.
+
+23 updates can be applied immediately.
+10 of these updates are standard security updates.
+To see these additional updates run: apt list --upgradable
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+New release '26.04.1 LTS' available.
+Run 'do-release-upgrade' to upgrade to it.
+
+
+Last login: Sun Oct  4 19:51:22 2026 from 10.7.101.70
+ubuntu@pg-db:~$ whoami
+ubuntu
+ubuntu@pg-db:~$ hostname
+pg-db
+ubuntu@pg-db:~$ id
+uid=1000(ubuntu) gid=1000(ubuntu) groups=1000(ubuntu),4(adm),24(cdrom),27(sudo),30(dip),105(lxd)
+ubuntu@pg-db:~$ sudo -l
+Matching Defaults entries for ubuntu on pg-db:
+    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin, use_pty
+
+User ubuntu may run the following commands on pg-db:
+    (ALL : ALL) ALL
+    (ALL) NOPASSWD: ALL
+ubuntu@pg-db:~$ 

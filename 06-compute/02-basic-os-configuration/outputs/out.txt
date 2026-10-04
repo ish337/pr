@@ -1,0 +1,13 @@
+ubuntu@pg-db:~$ sudo bash user.sh create newuser
+New password: 
+Retype new password: 
+passwd: password updated successfully
+uid=1001(newuser) gid=1001(newuser) groups=1001(newuser)
+ubuntu@pg-db:~$ su newuser
+Password: 
+newuser@pg-db:/home/ubuntu$ whoami
+newuser
+newuser@pg-db:/home/ubuntu$ exit
+exit
+ubuntu@pg-db:~$ whoami
+ubuntu
