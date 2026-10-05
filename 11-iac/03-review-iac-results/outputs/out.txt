@@ -1,0 +1,43 @@
+Summary
+- Execution type: plan, then apply with the same change.
+- Affected resource: proxmox_virtual_environment_vm.monitoring (VM 107), update in-place, memory 4096 -> 3072.
+- Plan: 0 to add, 1 to change, 0 to destroy, apply finished the same (1 changed).
+- I reviewed the plan before the apply, nothing is replaced or destroyed.
+- After the apply free -h on the VM shows 2.9Gi total, so the change is done.
+
+[Illia@archlinux terraform]$ terraform plan -no-color
+proxmox_download_file.ubuntu: Refreshing state... [id=local:import/monitoring-noble-server-cloudimg-amd64.qcow2]
+proxmox_virtual_environment_file.user_data: Refreshing state... [id=local:snippets/monitoring.yaml]
+proxmox_virtual_environment_vm.monitoring: Refreshing state... [id=107]
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+  ~ update in-place
+
+Terraform will perform the following actions:
+
+  # proxmox_virtual_environment_vm.monitoring will be updated in-place
+  ~ resource "proxmox_virtual_environment_vm" "monitoring" {
+        id                                   = "107"
+        name                                 = "monitoring"
+        tags                                 = [
+            "grafana",
+            "monitoring",
+        ]
+        # (36 unchanged attributes hidden)
+
+      ~ memory {
+          ~ dedicated      = 4096 -> 3072
+            # (4 unchanged attributes hidden)
+        }
+
+        # (6 unchanged blocks hidden)
+    }
+
+Plan: 0 to add, 1 to change, 0 to destroy.
+
+-------------------------------------------------------------
+
+ubuntu@monitoring:~$ free -h
+               total        used        free      shared  buff/cache   available
+Mem:           2.9Gi       545Mi       1.6Gi       1.3Mi       899Mi       2.4Gi
+Swap:             0B          0B          0B

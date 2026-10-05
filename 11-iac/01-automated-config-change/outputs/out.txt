@@ -1,0 +1,52 @@
+Changed only the input parameter memory = 3072 in terraform.tfvars, main.tf and templates were not touched.
+
+[Illia@archlinux terraform]$ terraform apply
+proxmox_download_file.ubuntu: Refreshing state... [id=local:import/monitoring-noble-server-cloudimg-amd64.qcow2]
+proxmox_virtual_environment_file.user_data: Refreshing state... [id=local:snippets/monitoring.yaml]
+proxmox_virtual_environment_vm.monitoring: Refreshing state... [id=107]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  ~ update in-place
+
+Terraform will perform the following actions:
+
+  # proxmox_virtual_environment_vm.monitoring will be updated in-place
+  ~ resource "proxmox_virtual_environment_vm" "monitoring" {
+        id                                   = "107"
+        name                                 = "monitoring"
+        tags                                 = [
+            "grafana",
+            "monitoring",
+        ]
+        # (36 unchanged attributes hidden)
+
+      ~ memory {
+          ~ dedicated      = 4096 -> 3072
+            # (4 unchanged attributes hidden)
+        }
+
+        # (6 unchanged blocks hidden)
+    }
+
+Plan: 0 to add, 1 to change, 0 to destroy.
+
+Do you want to perform these actions?
+  Terraform will perform the actions described above.
+  Only 'yes' will be accepted to approve.
+
+  Enter a value: yes
+
+proxmox_virtual_environment_vm.monitoring: Modifying... [id=107]
+proxmox_virtual_environment_vm.monitoring: Still modifying... [id=107, 00m10s elapsed]
+proxmox_virtual_environment_vm.monitoring: Still modifying... [id=107, 00m20s elapsed]
+proxmox_virtual_environment_vm.monitoring: Modifications complete after 21s [id=107]
+
+Apply complete! Resources: 0 added, 1 changed, 0 destroyed.
+
+-------------------------------------------------------------
+
+ubuntu@monitoring:~$ free -h
+               total        used        free      shared  buff/cache   available
+Mem:           2.9Gi       545Mi       1.6Gi       1.3Mi       899Mi       2.4Gi
+Swap:             0B          0B          0B
