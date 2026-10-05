@@ -8,6 +8,7 @@ Prometheus, Loki and Grafana on a separate Proxmox VM, they collect metrics and 
 - node exporter runs on both VMs, Prometheus scrapes it every 15 seconds, targets are in [prometheus.yml](terraform/files/prometheus.yml).
 - Grafana Alloy on pg-db reads log files and pushes them to Loki, config is in [config.alloy](pg-db/config.alloy).
 - Both agents on pg-db are installed by [install-agents.sh](pg-db/install-agents.sh), it also opens port 9100 in ufw only for the monitoring VM.
+- The pg-db Terraform puts this script and config.alloy into its cloud-init, so a new pg-db comes with the agents.
 - Grafana gets Prometheus and Loki as data sources on start from [grafana-datasources.yml](terraform/files/grafana-datasources.yml).
 - The agents on pg-db use about 46 MB of RAM (alloy 38 MB, node exporter 8 MB) and almost no CPU.
 
@@ -46,7 +47,7 @@ Prometheus, Loki and Grafana on a separate Proxmox VM, they collect metrics and 
 ## Setup
 
 1. Fill in `terraform/terraform.tfvars` from the example and run `terraform apply` in `terraform/`.
-2. Copy `pg-db/` to pg-db and run `sudo ./install-agents.sh` there.
+2. A new pg-db gets the agents by itself. For a pg-db that already runs, copy `pg-db/` there and run `sudo ./install-agents.sh`.
 3. Log in to Grafana at http://10.7.66.112:3000, import dashboard 1860 and create the alert rule.
 
 ## Limitations
@@ -54,3 +55,4 @@ Prometheus, Loki and Grafana on a separate Proxmox VM, they collect metrics and 
 - The alert is only visible in Grafana, notifications are not sent because there is no SMTP or chat set up.
 - The dashboard and the alert rule are made in the UI, not saved as files.
 - Grafana and Loki use plain HTTP without TLS, fine for the lab network only.
+- Cloud-init runs only on the first boot, so a change in `terraform/files/` doesn't reach the running VM, copy the file to /opt/monitoring and run `sudo docker compose up -d` there.

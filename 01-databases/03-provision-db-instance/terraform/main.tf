@@ -51,6 +51,9 @@ resource "proxmox_virtual_environment_file" "user_data" {
         db_password_b64 = base64encode(var.db_password)
         sample_url      = var.sample_data_url
       }))
+      // Monitoring agents, the same script and config as in 05-observability
+      agents_script_b64 = filebase64("${path.module}/../../../05-observability/04-infra-monitoring-logging/pg-db/install-agents.sh")
+      alloy_config_b64  = filebase64("${path.module}/../../../05-observability/04-infra-monitoring-logging/pg-db/config.alloy")
     })
   }
 }
@@ -110,5 +113,11 @@ resource "proxmox_virtual_environment_vm" "db" {
     }
 
     user_data_file_id = proxmox_virtual_environment_file.user_data.id
+  }
+
+  // Cloud-init runs only on the first boot, so a change in it must not
+  // recreate the VM with the database. Use -replace to build it again
+  lifecycle {
+    ignore_changes = [initialization[0].user_data_file_id]
   }
 }

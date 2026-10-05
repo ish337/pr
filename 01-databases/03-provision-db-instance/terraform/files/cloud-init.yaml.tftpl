@@ -17,9 +17,18 @@ write_files:
     permissions: "0700"
     encoding: b64
     content: ${setup_script_b64}
+  # Node exporter and Alloy for the monitoring VM
+  - path: /root/agents/install-agents.sh
+    permissions: "0700"
+    encoding: b64
+    content: ${agents_script_b64}
+  - path: /root/agents/config.alloy
+    encoding: b64
+    content: ${alloy_config_b64}
 
 # Output goes to /var/log/cloud-init-output.log
 runcmd:
   - systemctl start qemu-guest-agent
   - /root/setup-db.sh
   - rm -f /root/setup-db.sh
+  - cd /root/agents && ./install-agents.sh
