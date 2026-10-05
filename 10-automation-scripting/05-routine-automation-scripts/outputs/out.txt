@@ -1,0 +1,30 @@
+debian@ansible:~$ crontab -l | grep shutdown.sh
+0 22 * * * /bin/bash /home/debian/log/shutdown.sh > /home/debian/log/cron_debug.log 2>&1
+
+debian@ansible:~$ tail -n 1 ~/log/cron_debug.log
+{"ok":true,"result":{"message_id":19872,"from":{"id":***,"is_bot":true,"first_name":"***","username":"***"},"chat":{"id":***,"title":"***","type":"supergroup"},"date":1791229209,"text":"Building A (Turned off: 15):\n1. 10.1.0.7\n2. 10.1.1.1\n3. 10.1.1.2\n4. 10.1.1.3\n5. 10.1.1.4\n6. 10.1.1.5\n7. 10.1.1.6\n8. 10.1.1.7\n9. 10.1.1.8\n10. 10.1.1.9\n11. 10.1.1.10\n12. 10.1.1.11\n13. 10.1.1.12\n14. 10.1.1.13\n15. 10.1.1.14\n\n Building B (Turned off: 1):\n1. 10.2.1.100","entities":[...]}}
+
+------------
+
+[Illia@archlinux shutdown]$ python3 parser.py sample/ansible_shutdown.log; echo $?
+*Building A* (Turned off: 13):
+1. 10.1.1.2
+2. 10.1.1.3
+3. 10.1.1.4
+4. 10.1.1.5
+5. 10.1.1.6
+6. 10.1.1.7
+7. 10.1.1.8
+8. 10.1.1.9
+9. 10.1.1.10
+10. 10.1.1.11
+11. 10.1.1.12
+12. 10.1.1.13
+13. 10.1.1.14
+
+*Building B* (Turned off: 1):
+1. 10.2.1.100
+0
+[Illia@archlinux shutdown]$ python3 parser.py sample/all_unreachable.log; echo $?
+No computers were turned off
+0
