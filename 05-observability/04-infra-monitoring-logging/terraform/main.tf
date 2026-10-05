@@ -54,10 +54,11 @@ resource "proxmox_virtual_environment_file" "user_data" {
 }
 
 resource "proxmox_virtual_environment_vm" "monitoring" {
-  name      = var.vm_name
-  node_name = var.node_name
-  tags      = ["monitoring", "grafana"]
-  on_boot   = true
+  name        = var.vm_name
+  node_name   = var.node_name
+  description = "Prometheus, Loki and Grafana for the ${var.environment} environment, managed by Terraform"
+  tags        = ["monitoring", "grafana", var.environment]
+  on_boot     = true
 
   // qemu-guest-agent is installed by cloud-init, Proxmox reads the VM's IP through it
   agent {

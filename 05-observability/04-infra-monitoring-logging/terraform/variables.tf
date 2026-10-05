@@ -57,6 +57,17 @@ variable "ubuntu_image_url" {
 }
 
 // VM
+variable "environment" {
+  type        = string
+  description = "Environment name, it goes to the VM tags and description in Proxmox, e.g. lab, dev, test"
+  default     = "lab"
+
+  validation {
+    condition     = can(regex("^[a-z0-9-]+$", var.environment))
+    error_message = "environment can only have lowercase letters, numbers and -, Proxmox tags don't allow other symbols."
+  }
+}
+
 variable "vm_name" {
   type    = string
   default = "monitoring"
