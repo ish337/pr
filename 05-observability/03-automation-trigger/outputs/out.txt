@@ -1,0 +1,8 @@
+Trigger: Poll SCM in the Jenkins job "tiktok", schedule "* * * * *" (every minute).
+Code: set in JCasC in Tiktok_Clone tools/terraform/aws/files/install_jenkins_master.sh, line 102, scm('* * * * *').
+My PR with the trigger: https://github.com/fraspess/Tiktok_Clone/pull/180
+My PR that switched it to main: https://github.com/fraspess/Tiktok_Clone/pull/186
+Linked to: the tiktok pipeline (tools/Jenkins.jenkinsfile), repo fraspess/Tiktok_Clone, branch main.
+01.png: Poll SCM is on in the job config, schedule * * * * *.
+02.png: Git Polling Log, Jenkins checks main every minute and sees that 4fc988e is already built by #3, so "No changes".
+03.png: build #3 was "Started by an SCM change" after the merge of PR#197 (4fc988e) to main, it ran on agent-1.
