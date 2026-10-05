@@ -33,7 +33,9 @@ def format_output(data):
     output = []
     for building in sorted(data):
         # Sort by numbers, so 10.1.1.2 goes before 10.1.1.10
-        ips = sorted(data[building], key=lambda ip: [int(part) for part in ip.split(".")])
+        ips = sorted(
+            data[building], key=lambda ip: [int(part) for part in ip.split(".")]
+        )
 
         output.append(f"*{building}* (Turned off: {len(ips)}):")
         for i, ip in enumerate(ips, 1):

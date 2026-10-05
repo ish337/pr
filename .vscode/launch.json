@@ -1,0 +1,14 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "parser.py on the sample log",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/10-automation-scripting/05-routine-automation-scripts/shutdown/parser.py",
+      "args": ["sample/ansible_shutdown.log"],
+      "cwd": "${workspaceFolder}/10-automation-scripting/05-routine-automation-scripts/shutdown",
+      "console": "integratedTerminal"
+    }
+  ]
+}

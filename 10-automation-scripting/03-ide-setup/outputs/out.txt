@@ -1,0 +1,7 @@
+IDE: VSCodium 1.126 with the Python, Python Debugger and Ruff extensions.
+Config: .vscode/settings.json (interpreter /usr/bin/python3, Ruff formats Python on save) and .vscode/launch.json (run config for parser.py).
+01.png: installed extensions, Python, Python Debugger and Ruff.
+02.png: the interpreter Python 3.14.7 in the status bar.
+03.png: Ruff finds 2 problems in the old parser.py, the unused import sys (F401) and an f-string without variables (F541).
+04.png: Ruff formatted parser.py on save, the long sorted(...) line went to 3 lines.
+05.png: "parser.py on the sample log" started from Run and Debug, the output is in the terminal.
