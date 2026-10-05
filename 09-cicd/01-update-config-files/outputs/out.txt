@@ -1,0 +1,10 @@
+[Illia@archlinux files]$ yamllint docker-compose.yml 
+docker-compose.yml
+  1:1       warning  missing document start "---"  (document-start)
+  26:81     error    line too long (81 > 80 characters)  (line-length)
+
+-----
+
+[Illia@archlinux files]$ yamllint docker-compose.yml 
+[Illia@archlinux files]$ echo $?
+0

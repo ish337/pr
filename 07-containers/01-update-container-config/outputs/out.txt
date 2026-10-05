@@ -1,0 +1,11 @@
+sudo docker compose up -d && sudo docker compose ps && sudo docker compose exec grafana env | grep GF_ANALYTICS
+[+] Running 3/3
+ ✔ Container monitoring-prometheus-1  Running                                                                    0.0s 
+ ✔ Container monitoring-grafana-1     Started                                                                    0.7s 
+ ✔ Container monitoring-loki-1        Running                                                                    0.0s 
+NAME                      IMAGE                    COMMAND                  SERVICE      CREATED        STATUS                  PORTS
+monitoring-grafana-1      grafana/grafana:12.0.0   "/run.sh"                grafana      1 second ago   Up Less than a second   0.0.0.0:3000->3000/tcp, [::]:3000->3000/tcp
+monitoring-loki-1         grafana/loki:3.5.0       "/usr/bin/loki -conf…"   loki         12 hours ago   Up 5 hours              0.0.0.0:3100->3100/tcp, [::]:3100->3100/tcp
+monitoring-prometheus-1   prom/prometheus:v3.5.0   "/bin/prometheus --c…"   prometheus   12 hours ago   Up 5 hours              0.0.0.0:9090->9090/tcp, [::]:9090->9090/tcp
+GF_ANALYTICS_CHECK_FOR_UPDATES=false
+GF_ANALYTICS_REPORTING_ENABLED=false
