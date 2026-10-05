@@ -1,0 +1,50 @@
+ubuntu@monitoring:~$ sudo docker ps
+CONTAINER ID   IMAGE                    COMMAND                  CREATED         STATUS         PORTS                                         NAMES
+178ac830290e   grafana/loki:3.5.0       "/usr/bin/loki -conf…"   6 minutes ago   Up 6 minutes   0.0.0.0:3100->3100/tcp, [::]:3100->3100/tcp   monitoring-loki-1
+6cc3de54a530   prom/prometheus:v3.5.0   "/bin/prometheus --c…"   6 minutes ago   Up 6 minutes   0.0.0.0:9090->9090/tcp, [::]:9090->9090/tcp   monitoring-prometheus-1
+e8f4824cd184   grafana/grafana:12.0.0   "/run.sh"                6 minutes ago   Up 6 minutes   0.0.0.0:3000->3000/tcp, [::]:3000->3000/tcp   monitoring-grafana-1
+
+-------------
+
+ubuntu@pg-db:~$ systemctl status alloy prometheus-node-exporter
+● alloy.service - Vendor-agnostic OpenTelemetry Collector distribution with programmable pipelines
+     Loaded: loaded (/usr/lib/systemd/system/alloy.service; disabled; preset: enabled)
+     Active: active (running) since Mon 2026-10-05 06:58:59 UTC; 3min 16s ago
+       Docs: https://grafana.com/docs/alloy
+   Main PID: 8737 (alloy)
+      Tasks: 8 (limit: 2315)
+     Memory: 37.7M (peak: 38.2M)
+        CPU: 1.226s
+     CGroup: /system.slice/alloy.service
+             └─8737 /usr/bin/alloy run --storage.path=/var/lib/alloy/data /etc/alloy/config.alloy
+
+Oct 05 06:59:00 pg-db alloy-wrapper[8737]: ts=2026-10-05T06:59:00.049044096Z level=info msg="finished node evaluation" controller_path=/ controller_id="" trace_id=b888e031421ba>
+Oct 05 06:59:00 pg-db alloy-wrapper[8737]: ts=2026-10-05T06:59:00.04905658Z level=info msg="finished complete graph evaluation" controller_path=/ controller_id="" trace_id=b888>
+Oct 05 06:59:00 pg-db alloy-wrapper[8737]: ts=2026-10-05T06:59:00.049129657Z level=info msg="scheduling loaded components and services" controller_id=""
+Oct 05 06:59:00 pg-db alloy-wrapper[8737]: ts=2026-10-05T06:59:00.049309722Z level=info msg="{^_^} Alloy is running"
+Oct 05 06:59:00 pg-db alloy-wrapper[8737]: ts=2026-10-05T06:59:00.049500692Z level=info msg="starting cluster node" service=cluster peers_count=0 peers="" advertise_addr=127.0.>
+Oct 05 06:59:00 pg-db alloy-wrapper[8737]: ts=2026-10-05T06:59:00.050016655Z level=info msg="start tailing file" component_path=/ component_id=loki.source.file.logs component=t>
+Oct 05 06:59:00 pg-db alloy-wrapper[8737]: ts=2026-10-05T06:59:00.05060413Z level=info msg="peers changed" service=cluster peers_count=1 min_cluster_size=0 peers=pg-db
+Oct 05 06:59:00 pg-db alloy-wrapper[8737]: ts=2026-10-05T06:59:00.051264244Z level=info msg="start tailing file" component_path=/ component_id=loki.source.file.logs component=t>
+Oct 05 06:59:00 pg-db alloy-wrapper[8737]: ts=2026-10-05T06:59:00.051393597Z level=info msg="now listening for http traffic" service=http addr=127.0.0.1:12345
+Oct 05 06:59:00 pg-db alloy-wrapper[8737]: ts=2026-10-05T06:59:00.051909004Z level=info msg="start tailing file" component_path=/ component_id=loki.source.file.logs component=t>
+
+● prometheus-node-exporter.service - Prometheus exporter for machine metrics
+     Loaded: loaded (/usr/lib/systemd/system/prometheus-node-exporter.service; enabled; preset: enabled)
+     Active: active (running) since Mon 2026-10-05 06:58:35 UTC; 3min 40s ago
+       Docs: https://github.com/prometheus/node_exporter
+   Main PID: 7655 (prometheus-node)
+      Tasks: 5 (limit: 2315)
+     Memory: 8.0M (peak: 8.9M)
+        CPU: 940ms
+     CGroup: /system.slice/prometheus-node-exporter.service
+             └─7655 /usr/bin/prometheus-node-exporter
+
+Oct 05 06:58:35 pg-db prometheus-node-exporter[7655]: ts=2026-10-05T06:58:35.577Z caller=node_exporter.go:117 level=info collector=thermal_zone
+Oct 05 06:58:35 pg-db prometheus-node-exporter[7655]: ts=2026-10-05T06:58:35.577Z caller=node_exporter.go:117 level=info collector=time
+Oct 05 06:58:35 pg-db prometheus-node-exporter[7655]: ts=2026-10-05T06:58:35.577Z caller=node_exporter.go:117 level=info collector=timex
+Oct 05 06:58:35 pg-db prometheus-node-exporter[7655]: ts=2026-10-05T06:58:35.577Z caller=node_exporter.go:117 level=info collector=udp_queues
+Oct 05 06:58:35 pg-db prometheus-node-exporter[7655]: ts=2026-10-05T06:58:35.577Z caller=node_exporter.go:117 level=info collector=uname
+
+-------------------
+

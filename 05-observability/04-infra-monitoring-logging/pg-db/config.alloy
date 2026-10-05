@@ -1,0 +1,20 @@
+// Log files on pg-db, the job label shows where a line came from
+local.file_match "logs" {
+  path_targets = [
+    {"__path__" = "/var/log/syslog", "job" = "syslog", "host" = "pg-db"},
+    {"__path__" = "/var/log/auth.log", "job" = "auth", "host" = "pg-db"},
+    {"__path__" = "/var/log/postgresql/*.log", "job" = "postgresql", "host" = "pg-db"},
+  ]
+}
+
+loki.source.file "logs" {
+  targets    = local.file_match.logs.targets
+  forward_to = [loki.write.monitoring.receiver]
+}
+
+// Loki on the monitoring VM
+loki.write "monitoring" {
+  endpoint {
+    url = "http://10.7.66.112:3100/loki/api/v1/push"
+  }
+}

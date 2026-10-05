@@ -1,0 +1,14 @@
+# Copy to terraform.tfvars and fill in. terraform.tfvars is in .gitignore, keep secrets only there
+
+proxmox_endpoint  = "https://192.168.1.10:8006/"
+proxmox_api_token = "terraform@pve!tf=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+node_name         = "pve"
+
+# Key without a passphrase for uploading the cloud-init snippet, leave out to use ssh-agent
+proxmox_ssh_key_file = "~/.ssh/proxmox_tf"
+
+vm_ip         = "192.168.1.61"
+subnet_prefix = 24
+gateway       = "192.168.1.1"
+
+ssh_public_key = "ssh-ed25519 AAAA... you@laptop"

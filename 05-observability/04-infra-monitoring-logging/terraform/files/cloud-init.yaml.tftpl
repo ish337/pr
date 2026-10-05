@@ -1,0 +1,33 @@
+#cloud-config
+hostname: ${hostname}
+
+# SSH as the default "ubuntu" user
+ssh_authorized_keys:
+  - ${ssh_public_key}
+
+# Docker from the Ubuntu repository, node exporter for this VM's own metrics
+package_update: true
+packages:
+  - qemu-guest-agent
+  - docker.io
+  - docker-compose-v2
+  - prometheus-node-exporter
+
+write_files:
+  - path: /opt/monitoring/docker-compose.yml
+    encoding: b64
+    content: ${compose_b64}
+  - path: /opt/monitoring/prometheus.yml
+    encoding: b64
+    content: ${prometheus_b64}
+  - path: /opt/monitoring/loki.yml
+    encoding: b64
+    content: ${loki_b64}
+  - path: /opt/monitoring/grafana-datasources.yml
+    encoding: b64
+    content: ${datasources_b64}
+
+# Output goes to /var/log/cloud-init-output.log
+runcmd:
+  - systemctl start qemu-guest-agent
+  - docker compose -f /opt/monitoring/docker-compose.yml up -d
