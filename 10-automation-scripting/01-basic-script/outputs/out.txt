@@ -1,0 +1,12 @@
+[Illia@archlinux 01-basic-script]$ bash sysinfo.sh 
+Date:   2026-10-05 22:12:36
+Host:   archlinux
+Uptime: up 1 hour, 9 minutes
+CPU:    8 cores, load 0.62 0.76 0.77
+
+               total        used        free      shared  buff/cache   available
+Mem:            15Gi       7.9Gi       2.8Gi       1.4Gi       5.7Gi       7.5Gi
+Swap:          8.0Gi          0B       8.0Gi
+
+Filesystem             Size  Used Avail Use% Mounted on
+/dev/mapper/cryptroot  908G  170G  692G  20% /
