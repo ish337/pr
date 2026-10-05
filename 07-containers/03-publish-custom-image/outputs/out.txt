@@ -1,0 +1,105 @@
+ubuntu@monitoring:~/lab-status$ curl localhost:8080/health
+ok
+ubuntu@monitoring:~/lab-status$ curl localhost:8080
+
+<!doctype html>
+<html>
+<head>
+  <title>Lab status</title>
+  <style>
+    body { font-family: sans-serif; margin: 40px; }
+    td, th { padding: 6px 16px; text-align: left; }
+    .up { color: green; }
+    .down { color: red; }
+  </style>
+</head>
+<body>
+  <h1>Lab status</h1>
+  <table>
+    <tr><th>Service</th><th>URL</th><th>Status</th></tr>
+    
+    <tr>
+      <td>Proxmox</td>
+      <td><a href="https://10.7.66.200:8006">https://10.7.66.200:8006</a></td>
+      <td class="up">UP</td>
+    </tr>
+    
+    <tr>
+      <td>Grafana</td>
+      <td><a href="http://10.7.66.112:3000/api/health">http://10.7.66.112:3000/api/health</a></td>
+      <td class="up">UP</td>
+    </tr>
+    
+    <tr>
+      <td>Prometheus</td>
+      <td><a href="http://10.7.66.112:9090/-/healthy">http://10.7.66.112:9090/-/healthy</a></td>
+      <td class="up">UP</td>
+    </tr>
+    
+    <tr>
+      <td>Loki</td>
+      <td><a href="http://10.7.66.112:3100/ready">http://10.7.66.112:3100/ready</a></td>
+      <td class="down">DOWN</td>
+    </tr>
+    
+    <tr>
+      <td>pg-db node exporter</td>
+      <td><a href="http://10.7.66.111:9100/metrics">http://10.7.66.111:9100/metrics</a></td>
+      <td class="up">UP</td>
+    </tr>
+    
+    <tr>
+      <td>Jenkins</td>
+      <td><a href="http://10.7.66.144:8080/login">http://10.7.66.144:8080/login</a></td>
+      <td class="up">UP</td>
+    </tr>
+    
+    <tr>
+      <td>TikTok</td>
+      <td><a href="https://10.7.66.145">https://10.7.66.145</a></td>
+      <td class="up">UP</td>
+    </tr>
+    
+  </table>
+</body>
+</html>
+ubuntu@monitoring:~/lab-status$ 
+
+--------------
+
+ubuntu@monitoring:~/lab-status$ sudo docker login -u ish337
+ubuntu@monitoring:~/lab-status$ sudo docker tag lab-status ish337/lab-status:1.0
+ubuntu@monitoring:~/lab-status$ sudo docker push ish337/lab-status:1.0
+The push refers to repository [docker.io/ish337/lab-status]
+e360d85fdc0f: Mounted from library/python 
+a1391b689b78: Pushed 
+5e62c0470a09: Mounted from library/python 
+a5c16d6b9c92: Pushed 
+516873f09328: Pushed 
+b6efa329cbbb: Pushed 
+6b37362b3da7: Mounted from library/python 
+7065dc7a92bc: Pushed 
+a510a9ea6d60: Mounted from library/python 
+1.0: digest: sha256:8dd3803df580837503657a1732db30cb6169d863b8fbe6f6cac4787e43cc84cb size: 2270
+
+--------------
+
+ubuntu@monitoring:~/lab-status$ sudo docker run -d --name lab-status -p 8080:5000 ish337/lab-status:1.0
+Unable to find image 'ish337/lab-status:1.0' locally
+1.0: Pulling from ish337/lab-status
+Digest: sha256:8dd3803df580837503657a1732db30cb6169d863b8fbe6f6cac4787e43cc84cb
+Status: Downloaded newer image for ish337/lab-status:1.0
+438d8650c8758b78331a1cd7dfe57dd922ec238a22f79728af8a8aea466e892f
+ubuntu@monitoring:~/lab-status$ sudo docker ps
+CONTAINER ID   IMAGE                    COMMAND                  CREATED             STATUS             PORTS                                         NAMES
+438d8650c875   ish337/lab-status:1.0    "gunicorn --bind 0.0…"   16 seconds ago      Up 15 seconds      0.0.0.0:8080->5000/tcp, [::]:8080->5000/tcp   lab-status
+1d3925b7a6d7   grafana/grafana:12.0.0   "/run.sh"                About an hour ago   Up About an hour   0.0.0.0:3000->3000/tcp, [::]:3000->3000/tcp   monitoring-grafana-1
+178ac830290e   grafana/loki:3.5.0       "/usr/bin/loki -conf…"   13 hours ago        Up 6 hours         0.0.0.0:3100->3100/tcp, [::]:3100->3100/tcp   monitoring-loki-1
+6cc3de54a530   prom/prometheus:v3.5.0   "/bin/prometheus --c…"   13 hours ago        Up 6 hours         0.0.0.0:9090->9090/tcp, [::]:9090->9090/tcp   monitoring-prometheus-1
+
+ubuntu@monitoring:~/lab-status$ curl localhost:8080/health
+ok
+
+-----------
+
+https://hub.docker.com/repository/docker/ish337/lab-status/general
