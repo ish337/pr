@@ -1,0 +1,48 @@
+[Illia@archlinux pr]$ git diff 06-compute/02-basic-os-configuration/user.sh
+diff --git a/06-compute/02-basic-os-configuration/user.sh b/06-compute/02-basic-os-configuration/user.sh
+index ef27ac7..3b49e95 100755
+--- a/06-compute/02-basic-os-configuration/user.sh
++++ b/06-compute/02-basic-os-configuration/user.sh
+@@ -1,19 +1,24 @@
+ #!/bin/bash
+ 
+-# Usage: sudo ./user.sh create <username>
++# Usage: sudo ./user.sh create <username> [group]
+ #        sudo ./user.sh passwd <username>
+ set -euo pipefail
+ 
+-if [ $# -ne 2 ]; then
+-  echo "Usage: sudo ./user.sh create|passwd <username>"
++if [ $# -lt 2 ] || [ $# -gt 3 ]; then
++  echo "Usage: sudo ./user.sh create|passwd <username> [group]"
+   exit 1
+ fi
+ 
+ ACTION=$1
+ USERNAME=$2
++# Optional, an existing group for the new user, e.g. sudo
++GROUP=${3:-}
+ 
+ if [ "$ACTION" = "create" ]; then
+   useradd -m -s /bin/bash "$USERNAME"
++  if [ -n "$GROUP" ]; then
++    usermod -aG "$GROUP" "$USERNAME"
++  fi
+   passwd "$USERNAME"
+   id "$USERNAME"
+ elif [ "$ACTION" = "passwd" ]; then
+
+-------
+
+ubuntu@pg-db:~$ sudo bash user.sh create testadmin sudo
+New password: 
+Retype new password: 
+passwd: password updated successfully
+uid=1002(testadmin) gid=1002(testadmin) groups=1002(testadmin),27(sudo)
+ubuntu@pg-db:~$ sudo bash user.sh create testuser
+New password: 
+Retype new password: 
+passwd: password updated successfully
+uid=1003(testuser) gid=1003(testuser) groups=1003(testuser)
+ubuntu@pg-db:~$ sudo bash user.sh
+Usage: sudo ./user.sh create|passwd <username> [group]
