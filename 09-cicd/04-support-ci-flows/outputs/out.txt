@@ -1,0 +1,323 @@
+Started by an SCM change
+Obtained tools/Jenkins.jenkinsfile from git https://github.com/fraspess/Tiktok_Clone.git
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on agent-1 in /opt/jenkins-agent/workspace/tiktok
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+The recommended git tool is: git
+No credentials specified
+Fetching changes from the remote Git repository
+Checking out Revision 870cdad5dbcac3c3e2dbeadd7fb6a1a5403a4d3f (refs/remotes/origin/main)
+Commit message: "Merge pull request #200 from fraspess/develop"
+ > git rev-parse --resolve-git-dir /opt/jenkins-agent/workspace/tiktok/.git # timeout=10
+ > git config remote.origin.url https://github.com/fraspess/Tiktok_Clone.git # timeout=10
+Fetching upstream changes from https://github.com/fraspess/Tiktok_Clone.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.43.0'
+ > git fetch --tags --force --progress -- https://github.com/fraspess/Tiktok_Clone.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 870cdad5dbcac3c3e2dbeadd7fb6a1a5403a4d3f # timeout=10
+ > git rev-list --no-walk 4fc988e2985e7423d57d8c3a3410b516fe5e9d2c # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] withCredentials
+Masking supported pattern matches of $ENV_FILE
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Build)
+[Pipeline] echo
+Building images ...
+[Pipeline] sh
++ docker compose -p tiktok -f compose.server.yaml -f tools/compose.server.override.yaml --env-file **** build
+ Image tiktok-frontend Building 
+ Image tiktok-api Building 
+ Image tiktok-video_processor Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.63kB done
+#1 DONE 0.0s
+
+#2 [video_processor internal] load build definition from .dockerfile
+#2 transferring dockerfile: 807B done
+#2 DONE 0.0s
+
+#3 [frontend internal] load build definition from Dockerfile
+#3 transferring dockerfile: 551B done
+#3 DONE 0.0s
+
+#4 [api internal] load build definition from .dockerfile
+#4 transferring dockerfile: 1.24kB done
+#4 DONE 0.1s
+
+#5 [api internal] load metadata for mcr.microsoft.com/dotnet/aspnet:10.0
+#5 DONE 0.2s
+
+#6 [video_processor internal] load metadata for mcr.microsoft.com/dotnet/sdk:10.0
+#6 DONE 0.2s
+
+#7 [video_processor internal] load .dockerignore
+#7 transferring context: 284B done
+#7 DONE 0.0s
+
+#8 [video_processor internal] load build context
+#8 DONE 0.0s
+
+#9 [video_processor runtime 1/4] FROM mcr.microsoft.com/dotnet/aspnet:10.0@sha256:222759b391a1aaf241166672c8f99b2d4ada452e7b5319f3c6e8f265a37b5ad4
+#9 resolve mcr.microsoft.com/dotnet/aspnet:10.0@sha256:222759b391a1aaf241166672c8f99b2d4ada452e7b5319f3c6e8f265a37b5ad4 0.1s done
+#9 resolve mcr.microsoft.com/dotnet/aspnet:10.0@sha256:222759b391a1aaf241166672c8f99b2d4ada452e7b5319f3c6e8f265a37b5ad4 0.1s done
+#9 DONE 0.1s
+
+#10 [api build  1/10] FROM mcr.microsoft.com/dotnet/sdk:10.0@sha256:e70cdb7f80b0348f5cb85f19a8f670fca061f033d57eed12fa003d58b0e06317
+#10 resolve mcr.microsoft.com/dotnet/sdk:10.0@sha256:e70cdb7f80b0348f5cb85f19a8f670fca061f033d57eed12fa003d58b0e06317 0.1s done
+#10 DONE 0.1s
+
+#8 [api internal] load build context
+#8 transferring context: 37.17kB 0.0s done
+#8 DONE 0.1s
+
+#11 [video_processor build  5/10] COPY [Contracts/Contracts.csproj, Contracts/]
+#11 CACHED
+
+#12 [video_processor build  7/10] RUN dotnet restore "VideoProcessor/VideoProcessor.csproj"
+#12 CACHED
+
+#13 [video_processor build 10/10] RUN dotnet publish "VideoProcessor.csproj"     -c Release     -o /app/publish     --no-restore
+#13 CACHED
+
+#14 [video_processor runtime 3/4] RUN apt-get update &&     apt-get install -y --no-install-recommends ffmpeg     && apt-get clean     && rm -rf /var/lib/apt/lists/*
+#14 CACHED
+
+#15 [video_processor build  8/10] COPY . .
+#15 CACHED
+
+#16 [video_processor build  6/10] COPY [VideoProcessor/VideoProcessor.csproj, VideoProcessor/]
+#16 CACHED
+
+#17 [video_processor build  9/10] WORKDIR /src/VideoProcessor
+#17 CACHED
+
+#18 [video_processor runtime 4/4] COPY --from=build /app/publish .
+#18 CACHED
+
+#19 [api build  4/10] COPY [Directory.Packages.props, .]
+#19 CACHED
+
+#20 [api build  9/14] COPY [Contracts/Contracts.csproj, Contracts/]
+#20 CACHED
+
+#21 [api build  7/14] COPY [Persistence/Persistence.csproj, Persistence/]
+#21 CACHED
+
+#22 [api build 13/14] WORKDIR /src/Api
+#22 CACHED
+
+#23 [api build 11/14] RUN dotnet restore "Api/Api.csproj"
+#23 CACHED
+
+#24 [api runtime 3/4] RUN apt-get update &&     apt-get install -y --no-install-recommends         curl     && apt-get clean     && rm -rf /var/lib/apt/lists/*
+#24 CACHED
+
+#25 [api build  2/10] WORKDIR /src
+#25 CACHED
+
+#26 [api build 14/14] RUN dotnet publish "Api.csproj"     -c Release     -o /app/publish     --no-restore
+#26 CACHED
+
+#27 [api runtime 2/4] WORKDIR /app
+#27 CACHED
+
+#28 [api build 10/14] COPY [Api/Api.csproj, Api/]
+#28 CACHED
+
+#29 [api build  5/14] COPY [Domain/Domain.csproj, Domain/]
+#29 CACHED
+
+#30 [api build  6/14] COPY [Application/Application.csproj, Application/]
+#30 CACHED
+
+#31 [api build 12/14] COPY . .
+#31 CACHED
+
+#32 [api build  3/10] COPY [Directory.Build.props, .]
+#32 CACHED
+
+#33 [api build  8/14] COPY [Infrastructure/Infrastructure.csproj, Infrastructure/]
+#33 CACHED
+
+#34 [api runtime 4/4] COPY --from=build /app/publish .
+#34 CACHED
+
+#35 [video_processor] exporting to image
+#35 exporting layers done
+#35 exporting manifest sha256:89d90346dceb429007d5dfa0d61593e1b43aaf44cc49a3fde6ee2dddf2247207
+#35 exporting manifest sha256:89d90346dceb429007d5dfa0d61593e1b43aaf44cc49a3fde6ee2dddf2247207 done
+#35 exporting config sha256:d2e03e62c3e3200043d1adb349759ad072b8f96be2e79cd26d402f066dd4b4a6 done
+#35 exporting attestation manifest sha256:38280f546907471ec59970e6af45b2af7fd7ffa7c1f41c43a29779ed05aa7bd5
+#35 ...
+
+#36 [api] exporting to image
+#36 exporting layers done
+#36 exporting manifest sha256:7632166a63e5b23c3498e7551696570116ec717034198899ca04ab836505304f done
+#36 exporting config sha256:0e017e92de1cbae989ab322b765ac9647760082851097829a223b9911e1d9d83 done
+#36 exporting attestation manifest sha256:27e3c0b6446b6984f01a17ede8a07cab1077d87c05a9e440ff8aaa5e54df0d1f 0.1s done
+#36 exporting manifest list sha256:3532210baa7fcfa8ba0570fb86f80ee75c09229270c27c1768a973f84a5feaf2 0.0s done
+#36 naming to docker.io/library/tiktok-api:latest 0.0s done
+#36 unpacking to docker.io/library/tiktok-api:latest 0.0s done
+#36 DONE 0.3s
+
+#35 [video_processor] exporting to image
+#35 exporting attestation manifest sha256:38280f546907471ec59970e6af45b2af7fd7ffa7c1f41c43a29779ed05aa7bd5 0.1s done
+#35 exporting manifest list sha256:a61cbe656107a045106453749364cebfdf6874749aff2c277e562ba71c18dbb6 0.1s done
+#35 naming to docker.io/library/tiktok-video_processor:latest done
+#35 unpacking to docker.io/library/tiktok-video_processor:latest 0.0s done
+#35 DONE 0.3s
+
+#37 [frontend internal] load metadata for docker.io/library/node:22-alpine
+#37 ...
+
+#38 [frontend internal] load metadata for docker.io/library/nginx:alpine
+#38 DONE 0.9s
+
+#37 [frontend internal] load metadata for docker.io/library/node:22-alpine
+#37 DONE 0.9s
+
+#39 [frontend internal] load .dockerignore
+#39 transferring context: 442B done
+#39 DONE 0.0s
+
+#40 [frontend internal] load build context
+#40 transferring context: 7.78kB 0.0s done
+#40 DONE 0.0s
+
+#41 [frontend build 1/6] FROM docker.io/library/node:22-alpine@sha256:0a7108bf6c7bf5de370ffb1a3ed6be93d405b43ff159f681a8d18c0e2bc2e402
+#41 resolve docker.io/library/node:22-alpine@sha256:0a7108bf6c7bf5de370ffb1a3ed6be93d405b43ff159f681a8d18c0e2bc2e402 0.1s done
+#41 DONE 0.1s
+
+#42 [frontend production 1/3] FROM docker.io/library/nginx:alpine@sha256:df221db836e1754089190208cee7eeda94f233197056426eda74a43ab1abeac2
+#42 resolve docker.io/library/nginx:alpine@sha256:df221db836e1754089190208cee7eeda94f233197056426eda74a43ab1abeac2 0.1s done
+#42 DONE 0.1s
+
+#43 [frontend build 6/6] RUN npm run build
+#43 CACHED
+
+#44 [frontend build 2/6] WORKDIR /app
+#44 CACHED
+
+#45 [frontend production 2/3] COPY --from=build /app/dist /usr/share/nginx/html
+#45 CACHED
+
+#46 [frontend build 3/6] COPY package.json package-lock.json* ./
+#46 CACHED
+
+#47 [frontend build 4/6] RUN npm ci
+#47 CACHED
+
+#48 [frontend build 5/6] COPY . .
+#48 CACHED
+
+#49 [frontend production 3/3] COPY nginx.server.conf /etc/nginx/nginx.conf
+#49 CACHED
+
+#50 [api] resolving provenance for metadata file
+#50 DONE 0.0s
+
+#51 [frontend] exporting to image
+#51 exporting layers done
+#51 exporting manifest sha256:7268c490781e66de586a3e564c2a7661ff457da33dc2e222805ea83698c11327 done
+#51 exporting config sha256:e82eef89441f31292cb05b945c93571fe0a69c8af8d7c43baba60c4c721a0cb0 done
+#51 exporting attestation manifest sha256:7d1d8900cf287a183abad761d2969c43b7381eba0e698ac845d399c8f1624a61
+#51 ...
+
+#52 [video_processor] resolving provenance for metadata file
+#52 DONE 0.0s
+
+#51 [frontend] exporting to image
+#51 exporting attestation manifest sha256:7d1d8900cf287a183abad761d2969c43b7381eba0e698ac845d399c8f1624a61 0.1s done
+#51 exporting manifest list sha256:446f374220b3ac6a38800bcd71ffd1a34579dd45e45032f7455e214568dbe696 0.0s done
+#51 naming to docker.io/library/tiktok-frontend:latest done
+#51 unpacking to docker.io/library/tiktok-frontend:latest 0.0s done
+#51 DONE 0.2s
+
+#53 [frontend] resolving provenance for metadata file
+#53 DONE 0.0s
+ Image tiktok-api Built 
+ Image tiktok-frontend Built 
+ Image tiktok-video_processor Built 
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Deploy TikTok on remote server)
+[Pipeline] echo
+Deploying TikTok on remote server ...
+[Pipeline] sh
++ docker compose -p tiktok -f compose.server.yaml -f tools/compose.server.override.yaml --env-file **** up -d --remove-orphans
+ Container tiktok-rabbitMQ-1 Running 
+ Container tiktok-redis-1 Running 
+ Container db-backup Running 
+ Container tiktok-frontend-1 Running 
+ Container tiktok-db-1 Running 
+ Container api Running 
+ Container video_processor Running 
+ Container tiktok-db-1 Waiting 
+ Container tiktok-rabbitMQ-1 Waiting 
+ Container tiktok-db-1 Waiting 
+ Container tiktok-db-1 Waiting 
+ Container tiktok-rabbitMQ-1 Waiting 
+ Container tiktok-db-1 Healthy 
+ Container tiktok-db-1 Healthy 
+ Container tiktok-rabbitMQ-1 Healthy 
+ Container tiktok-db-1 Healthy 
+ Container api Waiting 
+ Container tiktok-rabbitMQ-1 Healthy 
+ Container api Healthy 
++ docker image prune -f
+Total reclaimed space: 0B
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Health check)
+[Pipeline] echo
+Checking that TikTok is up ...
+[Pipeline] sh
++ sleep 10
++ docker exec api curl -f http://localhost:8080/health
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+100     7    0     7Healthy    0     0   5384      0 --:--:-- --:--:-- --:--:--  7000
++ curl -fkI https://localhost
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+  0   752    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 05 Oct 2026 15:27:23 GMT
+Content-Type: text/html
+Content-Length: 752
+Last-Modified: Mon, 05 Oct 2026 06:28:45 GMT
+Connection: keep-alive
+ETag: "6ac3439d-2f0"
+Accept-Ranges: bytes
+
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
