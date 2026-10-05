@@ -110,4 +110,10 @@ resource "proxmox_virtual_environment_vm" "monitoring" {
 
     user_data_file_id = proxmox_virtual_environment_file.user_data.id
   }
+
+  // Cloud-init runs only on the first boot, so a change in the configs
+  // must not recreate the VM, they are copied to /opt/monitoring by hand
+  lifecycle {
+    ignore_changes = [initialization[0].user_data_file_id]
+  }
 }

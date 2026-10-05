@@ -1,3 +1,4 @@
+---
 services:
   # Metrics, keeps 15 days of data
   prometheus:
@@ -23,9 +24,13 @@ services:
       - 3100:3100
     restart: unless-stopped
 
-  # Dashboards and alerts, Prometheus and Loki are added as data sources on start
+  # Dashboards and alerts, Prometheus and Loki are added as data sources
   grafana:
     image: grafana/grafana:12.0.0
+    # Lab only, don't send usage stats and don't check for updates
+    environment:
+      - GF_ANALYTICS_REPORTING_ENABLED=false
+      - GF_ANALYTICS_CHECK_FOR_UPDATES=false
     volumes:
       - ./grafana-datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml
       - grafana-data:/var/lib/grafana
