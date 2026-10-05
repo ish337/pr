@@ -1,0 +1,89 @@
+ssh-keygen -t ed25519 -C "ish337 lab" -f ~/.ssh/lab_ed25519
+Generating public/private ed25519 key pair.
+Enter passphrase for "/home//.ssh/lab_ed25519" (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /home//.ssh/lab_ed25519
+Your public key has been saved in /home//.ssh/lab_ed25519.pub
+The key fingerprint is:
+SHA256:F+VGtyVjFrQZXUdItQyajP7KTtEXXMlfzYub5YJmi1c ish337 lab
+The key's randomart image is:
++--[ED25519 256]--+
+|            o+%OX|
+|          o+++=@B|
+|         ..+oo=o+|
+|        . .o ..o.|
+|        So....=  |
+|         .o+.E . |
+|         .+.o .  |
+|        o..o     |
+|        .+.      |
++----[SHA256]-----+
+
+----------------
+
+cat ~/.ssh/lab_ed25519.pub
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICVJ24Gww9bSm3mqfqnRs8hTJM0/sRbw7ZcwJidsfyol ish337 lab
+
+ls -l ~/.ssh | grep lab
+-rw------- 1 username username   444 Oct  6 00:13 lab_ed25519
+-rw-r--r-- 1 username username    92 Oct  6 00:13 lab_ed25519.pub
+
+---------------------
+
+ssh-copy-id -i ~/.ssh/lab_ed25519.pub ubuntu@10.7.66.112
+/usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/home//.ssh/lab_ed25519.pub"
+/usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
+/usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
+
+-----------------------
+
+cat ~/.ssh/config
+Host monitoring
+    HostName 10.7.66.112
+    User ubuntu
+    IdentityFile ~/.ssh/lab_ed25519
+
+Host github.com
+    User git
+    IdentityFile ~/.ssh/id_ed25519
+
+-------------------------
+
+ubuntu@monitoring:~$ whoami 
+ubuntu
+ubuntu@monitoring:~$ sudo whoami 
+root
+ubuntu@monitoring:~$ sudo sshd -T | grep -E "passwordauthentication|permitrootlogin"
+permitrootlogin without-password
+passwordauthentication no
+ubuntu@monitoring:~$ exit
+
+------------------
+
+ssh -o PubkeyAuthentication=no monitoring
+ubuntu@10.7.66.112: Permission denied (publickey).
+
+---------------
+
+[user@archlinux pr]$ ssh -T git@github.com
+Enter passphrase for key '/home//.ssh/id_ed25519': 
+Hi ish337! You've successfully authenticated, but GitHub does not provide shell access.
+[user@archlinux pr]$ git clone git@github.com:ish337/pr.git /tmp/pr-clone && rm -rf /tmp/pr-clone
+Cloning into '/tmp/pr-clone'...
+Enter passphrase for key '/home//.ssh/id_ed25519': 
+remote: Enumerating objects: 313, done.
+remote: Counting objects: 100% (313/313), done.
+remote: Compressing objects: 100% (227/227), done.
+remote: Total 313 (delta 82), reused 281 (delta 50), pack-reused 0 (from 0)
+Receiving objects: 100% (313/313), 5.79 MiB | 7.26 MiB/s, done.
+Resolving deltas: 100% (82/82), done.
+
+-------------
+
+ssh -v monitoring exit 2>&1 | grep -E "Server accepts key|Authenticated"
+Enter passphrase for key '/home//.ssh/lab_ed25519': debug1: Server accepts key: /home//.ssh/lab_ed25519 ED25519 SHA256:F+VGtyVjFrQZXUdItQyajP7KTtEXXMlfzYub5YJmi1c explicit
+
+---------------
+
+ssh -L 9091:localhost:9090 monitoring
+02.png: Prometheus from the VM on http://localhost:9091 through the tunnel
