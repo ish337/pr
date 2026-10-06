@@ -1,0 +1,28 @@
+Code: https://github.com/ish337/aws-lab (tag v1.0.0), run from envs/lab with terraform apply and terraform destroy.
+
+Outputs:
+
+ami = "ami-0045d7fc2ad003464"
+app_private_ip = "10.0.2.231"
+bucket_name = "lab-files-759adb750b64159e09bd86b5a0"
+flow_log_group = "/lab/vpc-flow-logs"
+nat_public_ip = "50.19.156.196"
+private_subnet_id = "subnet-07dbdd2ba08227beb"
+public_subnet_id = "subnet-0fdab7b0c6eee761b"
+readonly_role_arn = "arn:aws:iam::************:role/lab-s3-readonly"
+readwrite_role_arn = "arn:aws:iam::************:role/lab-s3-readwrite"
+ssh_app = "ssh -J ubuntu@100.55.3.224 ubuntu@10.0.2.231"
+ssh_web = "ssh -i ~/.ssh/lab_ed25519 ubuntu@100.55.3.224"
+vpc_id = "vpc-07d4cc9342cd63ccc"
+web_public_ip = "100.55.3.224"
+
+--------------
+
+module.network.aws_eip.nat: Destroying... [id=eipalloc-0cbd9f73979aafee9]
+module.network.aws_subnet.public: Destruction complete after 1s
+module.network.aws_internet_gateway.this: Destruction complete after 1s
+module.network.aws_vpc.this: Destroying... [id=vpc-07d4cc9342cd63ccc]
+module.network.aws_eip.nat: Destruction complete after 1s
+module.network.aws_vpc.this: Destruction complete after 1s
+
+Destroy complete! Resources: 39 destroyed.

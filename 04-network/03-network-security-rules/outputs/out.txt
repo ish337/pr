@@ -1,0 +1,40 @@
+Before the rule:
+
+[Illia@archlinux pr]$ curl -s --max-time 5 http://100.55.3.224 || echo "HTTP blocked"
+HTTP blocked
+
+-------------
+
+terraform plan after the commit "feat: allow HTTP to the web instance from my IP":
+
+Terraform will perform the following actions:
+
+  # aws_vpc_security_group_ingress_rule.web_http_from_me will be created
+  + resource "aws_vpc_security_group_ingress_rule" "web_http_from_me" {
+      + arn                    = (known after apply)
+      + cidr_ipv4              = "194.44.149.125/32"
+      + description            = "HTTP from my IP"
+      + from_port              = 80
+      + id                     = (known after apply)
+      + ip_protocol            = "tcp"
+      + region                 = "us-east-1"
+      + security_group_id      = "sg-02fdcb0a2addab720"
+      + security_group_rule_id = (known after apply)
+      + tags_all               = {
+          + "Environment" = "lab"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "aws-lab"
+        }
+      + to_port                = 80
+    }
+
+Plan: 1 to add, 0 to change, 0 to destroy.
+
+-------------
+
+After the rule:
+
+[Illia@archlinux aws-lab]$ curl -sI http://100.55.3.224 | head -3
+HTTP/1.1 200 OK
+Server: nginx/1.24.0 (Ubuntu)
+Date: Tue, 06 Oct 2026 10:52:44 GMT

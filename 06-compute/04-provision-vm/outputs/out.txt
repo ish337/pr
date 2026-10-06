@@ -1,0 +1,12 @@
+ubuntu@ip-10-0-1-169:~$ hostname -I
+10.0.1.169 
+ubuntu@ip-10-0-1-169:~$ lsb_release -d
+No LSB modules are available.
+Description:    Ubuntu 24.04.5 LTS
+ubuntu@ip-10-0-1-169:~$ df -h /
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/root       6.8G  2.3G  4.5G  34% /
+ubuntu@ip-10-0-1-169:~$ whoami
+ubuntu
+ubuntu@ip-10-0-1-169:~$ sudo whoami
+root

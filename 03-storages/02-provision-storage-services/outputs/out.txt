@@ -1,0 +1,14 @@
+ubuntu@monitoring:~$ aws s3 cp test.txt s3://$B/ --profile lab-readwrite
+upload: ./test.txt to s3://lab-files-759adb750b64159e09bd86b5a0/test.txt
+ubuntu@monitoring:~$ aws s3 cp test.txt s3://$B/ --profile lab-readonly
+upload failed: ./test.txt to s3://lab-files-759adb750b64159e09bd86b5a0/test.txt An error occurred (AccessDenied) when calling the PutObject operation: User: arn:aws:sts::************:assumed-role/lab-s3-readonly/botocore-session-1791310962 is not authorized to perform: s3:PutObject on resource: "arn:aws:s3:::lab-files-759adb750b64159e09bd86b5a0/test.txt" because no identity-based policy allows the s3:PutObject action
+ubuntu@monitoring:~$ aws s3 cp s3://$B/test.txt - --profile lab-readonly
+version 1
+ubuntu@monitoring:~$ echo "version 2" > test.txt
+ubuntu@monitoring:~$ aws s3 cp test.txt s3://$B/ --profile lab-readwrite
+upload: ./test.txt to s3://lab-files-759adb750b64159e09bd86b5a0/test.txt
+ubuntu@monitoring:~$ aws s3 cp s3://$B/test.txt - --profile lab-readonly
+version 2
+ubuntu@monitoring:~$ curl -s https://$B.s3.amazonaws.com/test.txt
+<?xml version="1.0" encoding="UTF-8"?>
+<Error><Code>AccessDenied</Code><Message>Access Denied</Message><RequestId>HH497MDGS0GTV8B6</RequestId><HostId>iNF5GtDDiPslAnd5Z/JVwJ10lEIqAzwkN78qjarVgUQlFGepOAYB8SGM0IaiZRgULdRpeKvQw4rswL6n1Hm11WvM7PeHU1lj</HostId></Error>

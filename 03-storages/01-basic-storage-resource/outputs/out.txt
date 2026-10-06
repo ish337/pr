@@ -1,0 +1,2 @@
+ubuntu@monitoring:~$ aws s3 cp test.txt s3://$B/ --profile lab-readwrite
+upload: ./test.txt to s3://lab-files-759adb750b64159e09bd86b5a0/test.txt

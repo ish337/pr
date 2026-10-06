@@ -1,0 +1,12 @@
+[Illia@archlinux pr]$ ping 100.55.3.224
+PING 100.55.3.224 (100.55.3.224) 56(84) bytes of data.
+^C
+--- 100.55.3.224 ping statistics ---
+12 packets transmitted, 0 received, 100% packet loss, time 11284ms
+
+[Illia@archlinux pr]$ curl -s --max-time 5 http://100.55.3.224 || echo "HTTP blocked"
+HTTP blocked
+
+ubuntu@ip-10-0-1-169:~$ nc -zv -w 5 1.1.1.1 443; nc -zv -w 5 1.1.1.1 853
+Connection to 1.1.1.1 443 port [tcp/https] succeeded!
+nc: connect to 1.1.1.1 port 853 (tcp) timed out: Operation now in progress
